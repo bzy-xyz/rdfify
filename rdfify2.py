@@ -69,7 +69,7 @@ def parseSchemaLocations(xml_root):
 
     return ret
 
-def extractRDFGraphWithSchema(xml_root, extra_schemata):
+def extractRDFGraphWithSchema(xml_root, extra_schemata, output_namespace):
     g = rdflib.Graph()
     s = rdflib.Graph()
     sdata = SchemaData()
@@ -83,7 +83,7 @@ def extractRDFGraphWithSchema(xml_root, extra_schemata):
 
 
     print "processing XML"
-    xml2rdf.parseXMLDocument(xml_root, g, sdata)
+    xml2rdf.parseXMLDocument(xml_root, g, sdata, output_namespace)
 
     return (g, s)
 
@@ -93,6 +93,7 @@ def main():
     argparser.add_argument('-t','--output-type', default='n3')
     argparser.add_argument('-o','--outfile', default=None)
     argparser.add_argument('-z','--schema-outfile', default=None)
+    argparser.add_argument('-n','--output-namespace', default="")
     argparser.add_argument('-s','--include-schema', action='append')
 
     args = argparser.parse_args()
@@ -108,7 +109,7 @@ def main():
     # Extract a RDF graph from the given root element.
     # This step does everything else.
 
-    g, s = extractRDFGraphWithSchema(r, args.include_schema)
+    g, s = extractRDFGraphWithSchema(r, args.include_schema, args.output_namespace)
 
     print "exporting"
 

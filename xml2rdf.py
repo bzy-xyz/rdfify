@@ -20,13 +20,13 @@ import argparse
 ns_rdfify = u'http://dig.csail.mit.edu/2014/rdfify/schema#'
 
 def normalizeNamespace(namespace):
-    if namespace[-1] != '#' and namespace[-1] != '/' and namespace != "http://www.w3.org/XML/1998/namespace":
+    if (not namespace) or (namespace[-1] != '#' and namespace[-1] != '/' and namespace != "http://www.w3.org/XML/1998/namespace"):
         return namespace + '#'
     else:
         return namespace
 
 def constructURIRef(namespace, element):
-    if namespace[-1] != '#' and namespace[-1] != '/' and namespace != "http://www.w3.org/XML/1998/namespace":
+    if (not namespace) or (namespace[-1] != '#' and namespace[-1] != '/' and namespace != "http://www.w3.org/XML/1998/namespace"):
         return rdflib.URIRef(u"{0}#{1}".format(namespace, element))
     else:
         return rdflib.URIRef(u"{0}{1}".format(namespace, element))
@@ -44,7 +44,7 @@ def lookupTagType(tag, schema_data):
 def lookupAttributeType(tag, schema_data):
     return schema_data.attributeMap.get(tag, "{http://www.w3.org/2001/XMLSchema}string")
 
-def processNode(tag, graph, parentNode, schema_data):
+def processNode(tag, graph, parentNode, schema_data, target_namespace):
     """ Converts a XML tag and children to RDF graph nodes.
     """
 
@@ -74,7 +74,8 @@ def processNode(tag, graph, parentNode, schema_data):
 
         # tag is the root entity
         if parentNode == None:
-            node = rdflib.BNode().skolemize()
+            #node = rdflib.BNode().skolemize()
+            node = constructURIRef(target_namespace, "")
             pred = rdflib.namespace.RDF.type
             print tag.tag
             obj = constructURIRefFromXMLName(lookupTagType(tag.tag, schema_data))
@@ -92,13 +93,13 @@ def processNode(tag, graph, parentNode, schema_data):
                     k_qn = lxml.etree.QName(k)
                     #if k_qn.localname == "id":
                     if lookupAttributeType(k, schema_data) in ("{http://www.w3.org/2001/XMLSchema}ID",):
-                        node = rdflib.URIRef(u"#{0}".format(v))
+                        node = constructURIRef(target_namespace, v)
                         break
                     # experimental support for reference-like tags
                     # invoked only if the reference tag has no other content or attributes
                     #if k_qn.localname == "ref" and len(tag.keys()) == 1 and len(tag.getchildren()) == 0:
-                    if lookupAttributeType(k, schema_data) in ("{http://www.w3.org/2001/XMLSchema}IDREF", "{http://www.w3.org/2001/XMLSchema}NCName") and len(tag.keys()) == 1 and len(tag.getchildren()) == 0:
-                        node = rdflib.URIRef(u"#{0}".format(v))
+                    if lookupAttributeType(k, schema_data) in ("{http://www.w3.org/2001/XMLSchema}IDREF", "{http://www.w3.org/2001/XMLSchema}NCName") and len(tag.keys()) == 1 and len
+                        node = constructURIRef(normalizeNamespace(target_namespace), v)
                         del tag.attrib[k]
                         ignore_text = True
                         break
@@ -136,7 +137,7 @@ def processNode(tag, graph, parentNode, schema_data):
         for child in tag.getchildren():
             processNode(child, graph, node, schema_data)
 
-def parseXMLDocument(xml_root, graph, schema_data):
+def parseXMLDocument(xml_root, graph, schema_data, target_namespace = ""):
     processNode(xml_root, graph, None, schema_data)
 
     for k, v in xml_root.nsmap.iteritems():
