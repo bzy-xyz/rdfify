@@ -135,10 +135,10 @@ def processNode(tag, graph, parentNode, schema_data, target_namespace):
 
         # recursively process any children
         for child in tag.getchildren():
-            processNode(child, graph, node, schema_data)
+            processNode(child, graph, node, schema_data, target_namespace)
 
 def parseXMLDocument(xml_root, graph, schema_data, target_namespace = ""):
-    processNode(xml_root, graph, None, schema_data)
+    processNode(xml_root, graph, None, schema_data, target_namespace)
 
     for k, v in xml_root.nsmap.iteritems():
         graph.bind(k, normalizeNamespace(v))
