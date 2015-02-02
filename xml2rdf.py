@@ -98,7 +98,7 @@ def processNode(tag, graph, parentNode, schema_data, target_namespace):
                     # experimental support for reference-like tags
                     # invoked only if the reference tag has no other content or attributes
                     #if k_qn.localname == "ref" and len(tag.keys()) == 1 and len(tag.getchildren()) == 0:
-                    if lookupAttributeType(k, schema_data) in ("{http://www.w3.org/2001/XMLSchema}IDREF", "{http://www.w3.org/2001/XMLSchema}NCName") and len(tag.keys()) == 1 and len
+                    if lookupAttributeType(k, schema_data) in ("{http://www.w3.org/2001/XMLSchema}IDREF", "{http://www.w3.org/2001/XMLSchema}NCName") and len(tag.keys()) == 1 and len(tag.getchildren()) == 0:
                         node = constructURIRef(normalizeNamespace(target_namespace), v)
                         del tag.attrib[k]
                         ignore_text = True
