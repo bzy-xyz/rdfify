@@ -77,7 +77,7 @@ def processNode(tag, graph, parentNode, schema_data, target_namespace):
             #node = rdflib.BNode().skolemize()
             node = constructURIRef(target_namespace, "")
             pred = rdflib.namespace.RDF.type
-            print tag.tag
+            #print tag.tag
             obj = constructURIRefFromXMLName(lookupTagType(tag.tag, schema_data))
             graph.add((node, pred, obj))
 

@@ -126,7 +126,8 @@ def processComplexType(tag, complexTypeMap, nsMap, targetNS = "#"):
                     return
 
                 else:
-                    print "unhandled tag {0} in complexType {1}".format(e.tag, name)
+                    pass
+                    #print "unhandled tag {0} in complexType {1}".format(e.tag, name)
 
 
 
@@ -250,7 +251,7 @@ def constructURIRef(namespace, element):
 
 def parseXMLSchemaRecursive(schema_loc, schema_graph, schema_data):
 
-    print "parsing schema at", schema_loc
+    #print "parsing schema at", schema_loc
 
     t = lxml.etree.parse(schema_loc)
     r = t.getroot()
@@ -278,12 +279,12 @@ def parseXMLSchema(schema_loc, schema_graph, schema_data):
 
     parseXMLSchemaRecursive(schema_loc, schema_graph, schema_data)
 
-    print "reducing type map"
+    #print "reducing type map"
 
     reduceSimpleTypeMap(schema_data.simpleTypeMap)
 
 
-    print "building RDFS"
+    #print "building RDFS"
     # build RDFS graph triples
     # for complex types
     for k, v in schema_data.complexTypeMap.iteritems():

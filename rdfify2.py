@@ -68,22 +68,25 @@ def parseSchemaLocations(xml_root):
                 ret.append(namespaceLocationToPath(child.get("namespace"), child.get("schemaLocation")))
 
     return ret
-
-def extractRDFGraphWithSchema(xml_root, extra_schemata, output_namespace):
-    g = rdflib.Graph()
-    s = rdflib.Graph()
-    sdata = SchemaData()
-
+    
+def extractRDFGraphWithSchemaInPlace(g, s, sdata, xml_root, extra_schemata, output_namespace):
     # load all referenced schemata and process them
-    print "processing schemata"
+    #print "processing schemata"
     for schema in parseSchemaLocations(xml_root):
         xsd2rdfs.parseXMLSchema(schema, s, sdata)
     for schema in extra_schemata:
         xsd2rdfs.parseXMLSchema(schema, s, sdata)
 
 
-    print "processing XML"
+    #print "processing XML"
     xml2rdf.parseXMLDocument(xml_root, g, sdata, output_namespace)
+
+def extractRDFGraphWithSchema(xml_root, extra_schemata, output_namespace):
+    g = rdflib.Graph()
+    s = rdflib.Graph()
+    sdata = SchemaData()
+
+    extractRDFGraphWithSchemaInPlace(g, s, sdata, xml_root, extra_schemata, output_namespace)
 
     return (g, s)
 
@@ -111,7 +114,7 @@ def main():
 
     g, s = extractRDFGraphWithSchema(r, args.include_schema, args.output_namespace)
 
-    print "exporting"
+    #print "exporting"
 
     # If schema-outfile is unspecified, merge the two graphs.
 
