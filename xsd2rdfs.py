@@ -99,7 +99,7 @@ def processSimpleType(tag, typeMap, nsMap, targetNS = "#"):
             typeMap[name] = nsExpand(n, nsMap)
             continue
 
-        raise NotImplementedError('unhandled tag {0} in simpleType {1}'.format(child.tag, name))
+        #raise NotImplementedError('unhandled tag {0} in simpleType {1}'.format(child.tag, name))
 
 def processComplexType(tag, complexTypeMap, nsMap, targetNS = "#"):
     name = "{{{0}}}{1}".format(targetNS, tag.get('name'))
@@ -146,7 +146,7 @@ def processAttribute(tag, attributeMap, nsMap, targetNS = "#"):
         # ignore annotations for now
         if child.tag == "{http://www.w3.org/2001/XMLSchema}annotation":
             continue
-        raise NotImplementedError('unhandled tag {0} in attribute {1}'.format(child.tag, name))
+        #raise NotImplementedError('unhandled tag {0} in attribute {1}'.format(child.tag, name))
     if attrType:
         attributeMap[name] = nsExpand(attrType, nsMap)
 
@@ -156,7 +156,7 @@ def processAttributeGroup(tag, attributeGroupMap, nsMap, targetNS = "#"):
         # ignore annotations for now
         if child.tag == "{http://www.w3.org/2001/XMLSchema}annotation":
             continue
-        raise NotImplementedError('unhandled tag {0} in attributeGroup {1}'.format(child.tag, name))
+        #raise NotImplementedError('unhandled tag {0} in attributeGroup {1}'.format(child.tag, name))
 
 def processElement(tag, elementMap, nsMap, targetNS = "#"):
     name = "{{{0}}}{1}".format(targetNS, tag.get('name'))

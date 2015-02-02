@@ -63,8 +63,9 @@ def parseSchemaLocations(xml_root):
 
     # load any schemata referenced by imports
     for child in xml_root.getchildren():
-        if lxml.etree.QName(child).text == "{http://www.w3.org/2001/XMLSchema}import":
-            ret.append(namespaceLocationToPath(child.get("namespace"), child.get("schemaLocation")))
+        if isinstance(child.tag, basestring):
+            if lxml.etree.QName(child).text == "{http://www.w3.org/2001/XMLSchema}import":
+                ret.append(namespaceLocationToPath(child.get("namespace"), child.get("schemaLocation")))
 
     return ret
 
