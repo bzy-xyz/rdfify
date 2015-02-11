@@ -74,8 +74,9 @@ def extractRDFGraphWithSchemaInPlace(g, s, sdata, xml_root, extra_schemata, outp
     #print "processing schemata"
     for schema in parseSchemaLocations(xml_root):
         xsd2rdfs.parseXMLSchema(schema, s, sdata)
-    for schema in extra_schemata:
-        xsd2rdfs.parseXMLSchema(schema, s, sdata)
+    if extra_schemata:
+        for schema in extra_schemata:
+            xsd2rdfs.parseXMLSchema(schema, s, sdata)
 
 
     #print "processing XML"
