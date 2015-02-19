@@ -248,6 +248,13 @@ def constructURIRef(namespace, element):
         return rdflib.URIRef(u"{0}#{1}".format(namespace, element))
     else:
         return rdflib.URIRef(u"{0}{1}".format(namespace, element))
+        
+def adjustNamespaceShortName(n):
+    ''' Adjust namespace short names to prevent breaking n3 parsers. '''
+    if n:
+        return n.replace('.','_')
+    else:
+        return n
 
 def parseXMLSchemaRecursive(schema_loc, schema_graph, schema_data):
 
@@ -257,7 +264,7 @@ def parseXMLSchemaRecursive(schema_loc, schema_graph, schema_data):
     r = t.getroot()
 
     for k, v in r.nsmap.iteritems():
-        schema_graph.bind(k, normalizeNamespace(v))
+        schema_graph.bind(adjustNamespaceShortName(k), normalizeNamespace(v))
 
     extractMappingsFromSchema(r, schema_data)
 
