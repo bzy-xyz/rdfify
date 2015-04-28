@@ -69,7 +69,7 @@ def parseSchemaLocations(xml_root):
 
     return ret
     
-def extractRDFGraphWithSchemaInPlace(g, s, sdata, xml_root, extra_schemata, output_namespace):
+def extractRDFGraphWithSchemaInPlace(g, s, sdata, xml_root, extra_schemata, output_namespace, alsoGenerateIsolatedGraph = False):
     # load all referenced schemata and process them
     #print "processing schemata"
     for schema in parseSchemaLocations(xml_root):
@@ -81,6 +81,13 @@ def extractRDFGraphWithSchemaInPlace(g, s, sdata, xml_root, extra_schemata, outp
 
     #print "processing XML"
     xml2rdf.parseXMLDocument(xml_root, g, sdata, output_namespace)
+    
+    if alsoGenerateIsolatedGraph == True:
+        g2 = rdflib.Graph()
+        xml2rdf.parseXMLDocument(xml_root, g2, sdata, output_namespace)
+        return g2
+        
+    return None
 
 def extractRDFGraphWithSchema(xml_root, extra_schemata, output_namespace):
     g = rdflib.Graph()
